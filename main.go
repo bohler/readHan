@@ -208,7 +208,6 @@ func (a *App) Find(g *gocui.Gui, _ *gocui.View) error {
 	vres, _ := g.View("result")
 	vres.Clear()
 	file := getViewValue(g, "file")
-	fmt.Println(file)
 	readHan(file, vres)
 
 	return nil

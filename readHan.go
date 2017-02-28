@@ -14,7 +14,7 @@ import (
 func readDir(file string, w io.Writer) {
 	dir, err := ioutil.ReadDir(file)
 	if err != nil {
-		fmt.Println(err)
+		return
 	}
 	for _, d := range dir {
 		if strings.HasPrefix(d.Name(), ".") {
@@ -48,13 +48,13 @@ func readFile(file string, w io.Writer) {
 	if strings.HasSuffix(file, ".m") || strings.HasSuffix(file, ".h") {
 		absFile, err := filepath.Abs(file)
 		if err != nil {
-			fmt.Println(err)
+			//fmt.Println(err)
 			return
 		}
 
 		f, err := os.Open(absFile)
 		if err != nil {
-			fmt.Println(err)
+			//fmt.Println(err)
 			return
 		}
 		defer f.Close()
@@ -79,7 +79,7 @@ func readFile(file string, w io.Writer) {
 func readHan(file string, w io.Writer) {
 	fileInfo, err := os.Stat(file)
 	if err != nil {
-		fmt.Println(err)
+		//fmt.Println(err)
 		return
 	}
 	if fileInfo.IsDir() {
