@@ -90,34 +90,3 @@ type viewProperties struct {
 	editor   gocui.Editor
 	text     string
 }
-
-var VIEW_PROPERTIES = map[string]viewProperties{
-	FileView: {
-		title:    "File - press ctrl+r for to find",
-		frame:    true,
-		editable: true,
-		wrap:     false,
-		editor:   &singleLineEditor{&defaultEditor},
-	},
-	FileFilterView: {
-		title:    "File Filter",
-		frame:    true,
-		editable: true,
-		wrap:     false,
-		editor:   &defaultEditor,
-	},
-	StringFilterView: {
-		title:    "String Filter",
-		frame:    true,
-		editable: true,
-		wrap:     false,
-		editor:   &defaultEditor,
-	},
-	ResultView: {
-		title:    "Result",
-		frame:    true,
-		editable: true,
-		wrap:     true,
-		editor:   nil, // should be set using a.getViewEditor(g)
-	},
-}

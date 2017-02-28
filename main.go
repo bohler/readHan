@@ -17,7 +17,8 @@ import (
 const (
 	FileView         = "file"
 	FileFilterView   = "filefilter"
-	StringFilterView = "stringfilter"
+	PrefixFilterView = "prefixfilter"
+	SuffixFilterView = "suffixfilter"
 	ResultView       = "result"
 	ErrorView        = "error"
 	PopUpView        = "popup"
@@ -141,7 +142,8 @@ const WINDOWS_OS = "windows"
 var VIEWS []string = []string{
 	FileView,
 	FileFilterView,
-	StringFilterView,
+	PrefixFilterView,
+	SuffixFilterView,
 	ResultView,
 }
 
@@ -205,10 +207,14 @@ func (a *App) setKey(g *gocui.Gui, keyStr, commandStr, viewName string) error {
 }
 
 func (a *App) Find(g *gocui.Gui, _ *gocui.View) error {
-	vres, _ := g.View("result")
+	vres, _ := g.View(ResultView)
 	vres.Clear()
-	file := getViewValue(g, "file")
-	readHan(file, vres)
+	reader.w = vres
+	reader.file = getViewValue(g, FileView)
+	reader.fileFilter = strings.Split(getViewValue(g, FileFilterView), ";")
+	reader.prefix = strings.Split(getViewValue(g, PrefixFilterView), ";")
+	reader.suffix = strings.Split(getViewValue(g, SuffixFilterView), ";")
+	readHan(reader.file)
 
 	return nil
 }
@@ -247,7 +253,7 @@ func (a *App) Layout(g *gocui.Gui) error {
 	}
 
 	//splitY := int(0.25 * float32(maxY-3))
-	if v, err := g.SetView(FileView, 0, 0, maxX-1, 3); err != nil {
+	if v, err := g.SetView(FileView, 0, 0, maxX-1, 2); err != nil {
 		if err != gocui.ErrUnknownView {
 			return err
 		}
@@ -259,7 +265,7 @@ func (a *App) Layout(g *gocui.Gui) error {
 		setViewTextAndCursor(v, tmp)
 	}
 
-	if v, err := g.SetView(FileFilterView, 0, 3, maxX-1, 6); err != nil {
+	if v, err := g.SetView(FileFilterView, 0, 2, maxX-1, 4); err != nil {
 		if err != gocui.ErrUnknownView {
 			return err
 		}
@@ -270,16 +276,25 @@ func (a *App) Layout(g *gocui.Gui) error {
 		setViewTextAndCursor(v, "*")
 	}
 
-	if v, err := g.SetView(StringFilterView, 0, 6, maxX-1, 9); err != nil {
+	if v, err := g.SetView(PrefixFilterView, 0, 4, maxX-1, 6); err != nil {
 		if err != gocui.ErrUnknownView {
 			return err
 		}
 		setViewDefaults(v)
 		v.Editable = true
-		v.Title = "String filter"
+		v.Title = "Prefix filter"
 		v.Editor = &defaultEditor
 	}
-	if v, err := g.SetView(ResultView, 0, 9, maxX-1, maxY-2); err != nil {
+	if v, err := g.SetView(SuffixFilterView, 0, 6, maxX-1, 8); err != nil {
+		if err != gocui.ErrUnknownView {
+			return err
+		}
+		setViewDefaults(v)
+		v.Editable = true
+		v.Title = "Suffix filter"
+		v.Editor = &defaultEditor
+	}
+	if v, err := g.SetView(ResultView, 0, 8, maxX-1, maxY-2); err != nil {
 		if err != gocui.ErrUnknownView {
 			return err
 		}
