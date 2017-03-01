@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"bytes"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -11,6 +12,7 @@ import (
 	"unicode"
 
 	log "github.com/bohler/lib/dlog"
+	"github.com/jroimartin/gocui"
 )
 
 func init() {
@@ -49,8 +51,6 @@ func readDir(file string) {
 	}
 }
 
-//你好士大夫士大夫士大夫士大夫萨达
-
 func isHan(file, s string, num int) {
 	s = strings.TrimSpace(s)
 	//log.Log.Info(s)
@@ -82,8 +82,6 @@ func isHan(file, s string, num int) {
 	if !expect {
 		return
 	}
-
-	//log.Log.Info("expect:", s)
 
 	for _, r := range s {
 		if unicode.Is(unicode.Scripts["Han"], r) {
@@ -144,7 +142,7 @@ func readFile(file string) {
 
 func readHan(file string) {
 	reader.result = ""
-	log.Log.Info(reader)
+	//log.Log.Info(reader)
 	fileInfo, err := os.Stat(file)
 	//log.Log.Info(len(reader.prefix), len(reader.suffix))
 	if err != nil {
@@ -157,6 +155,9 @@ func readHan(file string) {
 	} else {
 		readFile(file)
 	}
-	log.Log.Info(reader.result)
-	reader.w.Write([]byte(reader.result))
+	buf := bytes.NewBufferString(reader.result)
+	reader.w.Write(buf.Bytes())
+	if _, err := reader.w.(*gocui.View).Line(0); err != nil {
+		reader.w.(*gocui.View).SetOrigin(0, 0)
+	}
 }

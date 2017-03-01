@@ -6,9 +6,12 @@ var DefaultKeys = map[string]map[string]string{
 		"Tab":   "nextView",
 		"CtrlJ": "nextView",
 		"CtrlK": "prevView",
-		"CtrlR": "find",
+		"CtrlF": "find",
+		"Enter": "find",
 	},
 	"file": map[string]string{
 		"Enter": "find",
 	},
 }
+
+// 的 都 到

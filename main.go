@@ -334,6 +334,8 @@ func main() {
 		g.ASCII = true
 	}
 
+	g.ASCII = true
+
 	app := &App{}
 
 	// overwrite default editor
